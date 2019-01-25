@@ -7,3 +7,20 @@ body {
     border-bottom: 1px solid #a0a0a0;
 }
 
+#image-viewer {
+    overflow: auto;
+    width: 100%;
+    background-color: #808080;
+    flex-grow: 1;
+}
+
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+#canvas {
+    cursor: crosshair;
+}
+

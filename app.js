@@ -1,5 +1,6 @@
 const remote = require('electron').remote
 const canvas = require('./canvas')
+let toolbar, canvasElement
 
 function loadImage() {
     remote.dialog.showOpenDialog(
@@ -18,5 +19,9 @@ function loadImage() {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector("#open-image-button").addEventListener('click', loadImage)
-    canvas.setCanvasElement(document.getElementById("canvas"));
+    document.querySelector("#zoom-in-button").addEventListener('click', () => canvas.zoom(+0.2))
+    document.querySelector("#zoom-out-button").addEventListener('click', () => canvas.zoom(-0.2))
+    toolbar = document.getElementById('toolbar')
+    canvasElement = document.getElementById('canvas')
+    canvas.setCanvasElement(canvasElement)
 });
