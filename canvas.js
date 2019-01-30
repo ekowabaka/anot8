@@ -1,40 +1,40 @@
-let canvas, context, bitmap
+const Rectangle = require('./annotation').Rectangle
+let canvas
 let zoomLevel = 1
-let startLocation, selectorSize, selectedAnnotation
-const image = new Image()
+let selectedAnnotation
+let newAnnotation = false
 let annotations = []
 
-function setCanvasElement(element) {
+const image = document.createElement('img')
+
+function setCanvasContainer(element) {
     canvas = element;
-    context = element.getContext('2d')
-    canvas.addEventListener('mousedown', event => {
-        startLocation = [
-            canvas.parentNode.scrollLeft + event.x, 
-            canvas.parentNode.scrollTop + event.y
-        ]
+    image.draggable = false
+    canvas.appendChild(image)
+
+    image.addEventListener('mousedown', event => {
+        selectedAnnotation = new Rectangle(
+            canvas.parentNode.scrollLeft + event.offsetX, 
+            canvas.parentNode.scrollTop + event.offsetY
+        )
+        newAnnotation = true
+        annotations.push(selectedAnnotation)
+        annotations.forEach(annotation => annotation.dom.style.pointerEvents = 'none')
+        canvas.appendChild(selectedAnnotation.dom)
     });
-    canvas.addEventListener('mouseup', event => {
-        if(startLocation) {
-            let annotation = {
-                left: startLocation[0],
-                top: startLocation[1],
-                width: selectorSize[0],
-                height: selectorSize[1],
-                label: null
-            }
-            selectedAnnotation = annotation
-            annotations.push(annotation)
+
+    image.addEventListener('mouseup', event => {
+        if(newAnnotation) {
+            annotations.forEach(annotation => annotation.dom.style.pointerEvents = 'auto')
+            annotations.push(selectedAnnotation)
+            newAnnotation = false
         }
-        startLocation = undefined;
-        renderCanvas()
     });
-    canvas.addEventListener('mousemove', event => {
-        if(startLocation) {
-            selectorSize = [
-                canvas.parentNode.scrollLeft + event.x - startLocation[0], 
-                canvas.parentNode.scrollTop + event.y - startLocation[1]
-            ]
-            renderCanvas()
+
+    image.addEventListener('mousemove', event => {
+        if(newAnnotation) {
+            selectedAnnotation.width = canvas.parentNode.scrollLeft + event.offsetX - selectedAnnotation.left
+            selectedAnnotation.height = canvas.parentNode.scrollTop + event.offsetY - selectedAnnotation.top
         }
     });
 }
@@ -60,21 +60,6 @@ function drawRectAnnotation(annotation) {
     context.restore()
 }
 
-function renderCanvas() {
-    if(!bitmap) {
-        return;
-    }
-    const width = bitmap.width * zoomLevel
-    const height = bitmap.height * zoomLevel
-    canvas.width = width
-    canvas.height = height
-    context.drawImage(bitmap, 0, 0, width, height)
-    annotations.forEach(annotation => drawRectAnnotation(annotation)) 
-    if(startLocation) {
-        context.strokeRect(startLocation[0], startLocation[1], selectorSize[0], selectorSize[1])
-    }
-}
-
 function zoom(level) {
     zoomLevel += level
     renderCanvas()
@@ -83,12 +68,11 @@ function zoom(level) {
 image.onload = () => {
     Promise.resolve(createImageBitmap(image)).then(b => {
         bitmap = b
-        renderCanvas()
     })
 }
 
 module.exports = {
-    setCanvasElement : setCanvasElement,
+    setCanvasContainer : setCanvasContainer,
     setImage: setImage,
     zoom: zoom
 }

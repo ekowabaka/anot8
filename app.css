@@ -7,20 +7,29 @@ body {
     border-bottom: 1px solid #a0a0a0;
 }
 
-#image-viewer {
+#canvas-container {
     overflow: auto;
     width: 100%;
     background-color: #808080;
     flex-grow: 1;
+    position: relative;
+}
+
+#canvas-container img {
+    cursor: crosshair
+}
+
+#canvas-container > * {
+    position: absolute
+}
+
+#canvas-container .annotation{
+    background: red
 }
 
 #wrapper {
     display: flex;
     flex-direction: column;
     height: 100vh;
-}
-
-#canvas {
-    cursor: crosshair;
 }
 
