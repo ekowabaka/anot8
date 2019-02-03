@@ -1,6 +1,11 @@
 const remote = require('electron').remote
 const canvas = require('./canvas')
-let toolbar, canvasContainer
+const annotations = []
+const tools = require('./tools')
+const toolInstances = {
+    rectangle : new tools.RectangleTool(annotations),
+    selector : new tools.SelectorTool(annotations)
+}
 
 function loadImage() {
     remote.dialog.showOpenDialog(
@@ -19,9 +24,14 @@ function loadImage() {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector("#open-image-button").addEventListener('click', loadImage)
-    document.querySelector("#zoom-in-button").addEventListener('click', () => canvas.zoom(+0.2))
-    document.querySelector("#zoom-out-button").addEventListener('click', () => canvas.zoom(-0.2))
+    document.querySelectorAll("#toolbar > .tool").forEach(
+        toolButton => 
+            toolButton.addEventListener('click', () => {
+                console.log(toolInstances[toolButton.getAttribute('tool-name')])
+                canvas.setActiveTool(toolInstances[toolButton.getAttribute('tool-name')])
+            })
+        )
     toolbar = document.getElementById('toolbar')
-    canvasContainer = document.getElementById('canvas-container')
-    canvas.setCanvasContainer(canvasContainer)
+    canvas.setCanvasContainer(document.getElementById('canvas-container'))
+    canvas.setActiveTool(toolInstances.selector)
 });

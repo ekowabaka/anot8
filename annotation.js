@@ -1,11 +1,11 @@
-class Rectangle {
+class RectangleAnnotation {
     constructor (left, top, width, height) {
         this.dom = document.createElement('div')
         this.dom.classList.add('annotation')
         this.left = left
         this.top = top
-        this.width = width ? width : 10
-        this.height = height ? height : 10
+        this.width = width ? width : 0
+        this.height = height ? height : 0
     }
 
     set left(value) {
@@ -31,8 +31,12 @@ class Rectangle {
     set height(value) {
         this.dom.style.height = value + 'px'
     }
+
+    edit() {
+        
+    }
 }
 
 module.exports = {
-    Rectangle : Rectangle
+    RectangleAnnotation : RectangleAnnotation
 }

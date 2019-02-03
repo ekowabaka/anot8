@@ -24,7 +24,14 @@ body {
 }
 
 #canvas-container .annotation{
-    background: red
+    background: rgba(255, 0, 0, 0.5);
+    border:1px solid red;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+#canvas-container .annotation:hover {
+    opacity: 0.7;
 }
 
 #wrapper {
