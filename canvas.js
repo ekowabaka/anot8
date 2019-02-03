@@ -1,9 +1,4 @@
-const Rectangle = require('./annotation').Rectangle
 let canvas
-let zoomLevel = 1
-let selectedAnnotation
-let newAnnotation = false
-let annotations = []
 let activeTool
 
 const image = document.createElement('img')

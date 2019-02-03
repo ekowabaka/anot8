@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll("#toolbar > .tool").forEach(
         toolButton => 
             toolButton.addEventListener('click', () => {
-                console.log(toolInstances[toolButton.getAttribute('tool-name')])
                 canvas.setActiveTool(toolInstances[toolButton.getAttribute('tool-name')])
             })
         )

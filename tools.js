@@ -24,9 +24,16 @@ class RectangleTool extends Tool {
         this.startPoint = undefined
     }
 
-    mouseUp() {
+    mouseUp(event, canvas) {
         if(this.creatingNewAnnotation) {
             this.creatingNewAnnotation = false
+            if(this.newAnnotation.width > 2 && this.newAnnotation.height > 2) {
+                console.log(this.newAnnotation.width, this.newAnnotation.height)
+                this.annotations.push(this.newAnnotation)
+                this.newAnnotation.editLabel()    
+            } else {
+                canvas.removeChild(this.newAnnotation.dom)
+            }
         }
     }
 
@@ -34,7 +41,6 @@ class RectangleTool extends Tool {
         this.startPoint = [canvas.parentNode.scrollLeft + event.offsetX, canvas.parentNode.scrollTop + event.offsetY]
         this.newAnnotation = new RectangleAnnotation( this.startPoint[0], this.startPoint[1])
         this.creatingNewAnnotation = true
-        this.annotations.push(this.newAnnotation)
         canvas.appendChild(this.newAnnotation.dom)
     }
 
