@@ -11,14 +11,10 @@ function loadImage() {
     remote.dialog.showOpenDialog(
         remote.getCurrentWindow(),
         {
-            filters: [
-                { name: 'Images', extensions: ['jpg', 'png', 'gif'] }
-            ],
+            filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }],
             multipleSelections: false
         },
-        filename => {
-            canvas.setImage(filename[0])
-        }
+        filename => canvas.setImage(filename[0])
     );
 }
 

@@ -16,7 +16,16 @@ class Tool {
     deactivate() { }
 }
 
+/**
+ * A tool for creating and editing rectangle annotations.
+ */
 class RectangleTool extends Tool {
+
+    /**
+     * Create a new rectangle annotation
+     * 
+     * @param {Array} annotations 
+     */
     constructor (annotations) {
         super(annotations)
         this.creatingNewAnnotation = false
@@ -24,22 +33,37 @@ class RectangleTool extends Tool {
         this.startPoint = undefined
     }
 
+    /**
+     * Event handler 
+     * 
+     * @param {MouseEvent} event 
+     * @param {Canvas} canvas 
+     */
     mouseUp(event, canvas) {
         if(this.creatingNewAnnotation) {
             this.creatingNewAnnotation = false
             if(this.newAnnotation.width > 2 && this.newAnnotation.height > 2) {
                 console.log(this.newAnnotation.width, this.newAnnotation.height)
                 this.annotations.push(this.newAnnotation)
-                this.newAnnotation.editLabel()    
+                this.newAnnotation.editLabel()
             } else {
                 canvas.removeChild(this.newAnnotation.dom)
             }
         }
     }
 
+    /**
+     * 
+     * 
+     * @param {MouseEvent} event 
+     * @param {Canvas} canvas 
+     */
     mouseDown(event, canvas) {
-        this.startPoint = [canvas.parentNode.scrollLeft + event.offsetX, canvas.parentNode.scrollTop + event.offsetY]
-        this.newAnnotation = new RectangleAnnotation( this.startPoint[0], this.startPoint[1])
+        this.startPoint = [
+            canvas.parentNode.scrollLeft + event.offsetX, 
+            canvas.parentNode.scrollTop + event.offsetY
+        ]
+        this.newAnnotation = new RectangleAnnotation(this.startPoint[0], this.startPoint[1])
         this.creatingNewAnnotation = true
         canvas.appendChild(this.newAnnotation.dom)
     }
@@ -78,4 +102,3 @@ module.exports = {
     RectangleTool : RectangleTool,
     SelectorTool: SelectorTool
 }
-
