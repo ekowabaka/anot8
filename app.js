@@ -14,7 +14,9 @@ function loadImage() {
             filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif'] }],
             multipleSelections: false
         },
-        filename => canvas.setImage(filename[0])
+        filename => {
+            if(filename) canvas.setImage(filename[0])
+        }
     );
 }
 

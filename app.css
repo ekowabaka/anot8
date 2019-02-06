@@ -58,3 +58,11 @@ body {
 .label-editor:focus {
     outline: none
 }
+
+.resize-tab {
+    width: 10px;
+    height: 10px;
+    border:1px solid black;
+    background: white;
+    position: absolute
+}

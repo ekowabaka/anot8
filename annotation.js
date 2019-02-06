@@ -28,12 +28,50 @@ class LabelEditor {
     }
 }
 
-class RectangleAnnotation {
-    constructor (left, top, width, height) {
+class Annotation {
+    constructor() {
+        const resizeTabTypes = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']
+
         this.dom = document.createElement('div')
         this.dom.classList.add('annotation')
-        this.labelDom = document.createElement('span')
-        this.dom.appendChild(this.labelDom)
+        this.dom.addEventListener('click', () => this.select())
+
+        this.labelElement = document.createElement('span')
+        this.dom.appendChild(this.labelElement)
+
+        this.resizeTabs = {}
+        for(let resizeTabType of resizeTabTypes) {
+            let tab = document.createElement('div')
+            tab.classList.add('resize-tab')
+            tab.classList.add(`${resizeTabType}-resize-tab`)
+            tab.style.cursor = `${resizeTabType}-resize`
+            this.resizeTabs[resizeTabType] = tab
+        }
+    }
+
+    select() {
+        const resizeTabPositions = {
+            n : [-6, this.width / 2 - 6, this.nResize],
+            s : [this.height - 6, this.width / 2 - 6, this.sResize],
+            e : [this.height / 2 - 6, this.width - 6, this.eResize],
+            w : [this.height / 2 - 6, -6, this.wResize],
+            ne : [-6, this.width - 6, this.neResize],
+            nw : [-6, -6, this.nwResize],
+            se : [this.height - 6, this.width - 6, this.seResize],
+            sw : [this.height - 6, -6, this.nResize],
+        }
+
+        for(const tab in resizeTabPositions) {
+            this.resizeTabs[tab].style.top = resizeTabPositions[tab][0] + 'px'
+            this.resizeTabs[tab].style.left = resizeTabPositions[tab][1] + 'px'
+            this.dom.appendChild(this.resizeTabs[tab])
+        }
+    }
+}
+
+class RectangleAnnotation extends Annotation {
+    constructor (left, top, width, height) {     
+        super()   
         this.left = left
         this.top = top
         this.width = width ? width : 0
@@ -42,11 +80,11 @@ class RectangleAnnotation {
     }
 
     set label(value) {
-        this.labelDom.innerHTML = value
+        this.labelElement.innerHTML = value
     }
 
     get label() {
-        return this.labelDom.innerHTML
+        return this.labelElement.innerHTML
     }
 
     set left(value) {
