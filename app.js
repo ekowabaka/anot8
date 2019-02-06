@@ -1,11 +1,8 @@
 const remote = require('electron').remote
-const canvas = require('./canvas')
+const canvasManager = require('./canvas_manager')
 const annotations = []
 const tools = require('./tools')
-const toolInstances = {
-    rectangle : new tools.RectangleTool(annotations),
-    selector : new tools.SelectorTool(annotations)
-}
+
 
 function loadImage() {
     remote.dialog.showOpenDialog(
@@ -15,20 +12,25 @@ function loadImage() {
             multipleSelections: false
         },
         filename => {
-            if(filename) canvas.setImage(filename[0])
+            if(filename) canvasManager.setImagePath(filename[0])
         }
     );
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('canvas-container')
+    const toolInstances = {
+        rectangle : new tools.RectangleTool(canvas, annotations),
+        selector : new tools.SelectorTool(canvas, annotations)
+    }
     document.querySelector("#open-image-button").addEventListener('click', loadImage)
     document.querySelectorAll("#toolbar > .tool").forEach(
         toolButton => 
             toolButton.addEventListener('click', () => {
-                canvas.setActiveTool(toolInstances[toolButton.getAttribute('tool-name')])
+                canvasManager.setActiveTool(toolInstances[toolButton.getAttribute('tool-name')])
             })
         )
     toolbar = document.getElementById('toolbar')
-    canvas.setCanvasContainer(document.getElementById('canvas-container'))
-    canvas.setActiveTool(toolInstances.selector)
+    canvasManager.setCanvasContainer(canvas)
+    canvasManager.setActiveTool(toolInstances.selector)
 });

@@ -1,15 +1,16 @@
 const RectangleAnnotation = require('./annotation').RectangleAnnotation
 
 class Tool {
-    constructor(annotations) {
+    constructor(canvas, annotations) {
         this.annotations = annotations
+        this.canvas = canvas
     }
 
     mouseUp() { }
 
-    mouseDown(event, canvas) { }
+    mouseDown(event) { }
 
-    mouseMove(event, canvas) { }    
+    mouseMove(event) { }    
 
     activate() { }
 
@@ -26,20 +27,20 @@ class RectangleTool extends Tool {
      * 
      * @param {Array} annotations 
      */
-    constructor (annotations) {
-        super(annotations)
+    constructor (canvas, annotations) {
+        super(canvas, annotations)
         this.creatingNewAnnotation = false
         this.newAnnotation = undefined
         this.startPoint = undefined
+        this.cursor = 'crosshair'
     }
 
     /**
      * Event handler 
      * 
      * @param {MouseEvent} event 
-     * @param {Canvas} canvas 
      */
-    mouseUp(event, canvas) {
+    mouseUp(event) {
         if(this.creatingNewAnnotation) {
             this.creatingNewAnnotation = false
             if(this.newAnnotation.width > 2 && this.newAnnotation.height > 2) {
@@ -47,7 +48,7 @@ class RectangleTool extends Tool {
                 this.annotations.push(this.newAnnotation)
                 this.newAnnotation.editLabel()
             } else {
-                canvas.removeChild(this.newAnnotation.dom)
+                this.canvas.removeChild(this.newAnnotation.dom)
             }
         }
     }
@@ -56,22 +57,21 @@ class RectangleTool extends Tool {
      * 
      * 
      * @param {MouseEvent} event 
-     * @param {Canvas} canvas 
      */
-    mouseDown(event, canvas) {
+    mouseDown(event) {
         this.startPoint = [
-            canvas.parentNode.scrollLeft + event.offsetX, 
-            canvas.parentNode.scrollTop + event.offsetY
+            this.canvas.parentNode.scrollLeft + event.offsetX, 
+            this.canvas.parentNode.scrollTop + event.offsetY
         ]
         this.newAnnotation = new RectangleAnnotation(this.startPoint[0], this.startPoint[1])
         this.creatingNewAnnotation = true
-        canvas.appendChild(this.newAnnotation.dom)
+        this.canvas.appendChild(this.newAnnotation.dom)
     }
 
-    mouseMove(event, canvas) {
+    mouseMove(event) {
         if(this.creatingNewAnnotation) {
-            let newWidth = canvas.parentNode.scrollLeft + event.offsetX - this.startPoint[0]
-            let newHeight = canvas.parentNode.scrollTop + event.offsetY - this.startPoint[1]
+            let newWidth = this.canvas.parentNode.scrollLeft + event.offsetX - this.startPoint[0]
+            let newHeight = this.canvas.parentNode.scrollTop + event.offsetY - this.startPoint[1]
             if(newWidth < 0) {
                 this.newAnnotation.left = this.startPoint[0] + newWidth
             }
@@ -85,8 +85,9 @@ class RectangleTool extends Tool {
 }
 
 class SelectorTool extends Tool {
-    constructor(annotations) {
-        super(annotations)
+    constructor(canvas, annotations) {
+        super(canvas, annotations)
+        this.cursor = 'default'
     }
 
     activate() {

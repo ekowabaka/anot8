@@ -21,8 +21,12 @@ function setCanvasContainer(element) {
     });
 }
 
-function setImage(path) {
+function setImagePath(path) {
     image.src = path
+}
+
+function getImage() {
+    return image
 }
 
 function zoom(level) {
@@ -34,14 +38,20 @@ function setActiveTool(tool) {
         activeTool.deactivate()
     }
     tool.activate()
+    image.style.cursor = tool.cursor
     activeTool = tool
+}
+
+function getCanvasContainer() {
+    return canvas
 }
 
 image.onload = () => Promise.resolve(createImageBitmap(image)).then(b => bitmap = b)
 
 module.exports = {
     setCanvasContainer : setCanvasContainer,
-    setImage: setImage,
-    zoom: zoom,
+    getCanvasContainer : getCanvasContainer,
+    setImagePath: setImagePath,
+    getImage: getImage,
     setActiveTool: setActiveTool
 }

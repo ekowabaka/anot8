@@ -1,3 +1,5 @@
+const canvasManager = require('./canvas_manager')
+
 class LabelEditor {
     constructor(label) {
         this.dom = document.createElement('input')
@@ -47,6 +49,13 @@ class Annotation {
             tab.style.cursor = `${resizeTabType}-resize`
             this.resizeTabs[resizeTabType] = tab
         }
+
+        this.selected = false
+
+        this.dom.addEventListener('mousedown', event => {
+            if(!this.selected) return
+            this.grabPosition = [event.offsetX + this.left, event.offsetY + this.top]
+        })
     }
 
     select() {
@@ -66,6 +75,9 @@ class Annotation {
             this.resizeTabs[tab].style.left = resizeTabPositions[tab][1] + 'px'
             this.dom.appendChild(this.resizeTabs[tab])
         }
+
+        this.dom.style.cursor = 'move'
+        this.selected = true
     }
 }
 
