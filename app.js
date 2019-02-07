@@ -1,6 +1,5 @@
 const remote = require('electron').remote
 const canvasManager = require('./canvas_manager')
-const annotations = []
 const tools = require('./tools')
 
 
@@ -20,8 +19,8 @@ function loadImage() {
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('canvas-container')
     const toolInstances = {
-        rectangle : new tools.RectangleTool(canvas, annotations),
-        selector : new tools.SelectorTool(canvas, annotations)
+        rectangle : new tools.RectangleTool(canvas),
+        selector : new tools.SelectorTool(canvas)
     }
     document.querySelector("#open-image-button").addEventListener('click', loadImage)
     document.querySelectorAll("#toolbar > .tool").forEach(

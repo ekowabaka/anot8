@@ -1,5 +1,6 @@
 let canvas
 let activeTool
+let annotations = []
 
 const image = document.createElement('img')
 
@@ -7,17 +8,21 @@ function setCanvasContainer(element) {
     canvas = element;
     image.draggable = false
     canvas.appendChild(image)
+    
 
     image.addEventListener('mousedown', event => {
-        activeTool.mouseDown(event, canvas)
+        //activeTool.mouseDown(event)
+        eventListeners[0].mouseDown(event)
     });
 
     image.addEventListener('mouseup', event => {
-        activeTool.mouseUp(event, canvas)
+        //activeTool.mouseUp(event)
+        eventListeners[0].mouseUp(event)
     });
 
     image.addEventListener('mousemove', event => {
-        activeTool.mouseMove(event, canvas)
+        //activeTool.mouseMove(event)
+        eventListeners[0].mouseMove(event)
     });
 }
 
@@ -40,10 +45,31 @@ function setActiveTool(tool) {
     tool.activate()
     image.style.cursor = tool.cursor
     activeTool = tool
+    eventListeners = [activeTool]
+}
+
+function pushEventListner(listener) {
+    eventListeners.unshift(listener)
+}
+
+function popEventListener() {
+    return eventListeners.shift()
 }
 
 function getCanvasContainer() {
     return canvas
+}
+
+function getAnnotations() {
+    return annotations
+}
+
+function disableAnnotations() {
+    annotations.forEach(annotation => annotation.dom.style.pointerEvents = 'none')
+}
+
+function enableAnnotations() {
+    annotations.forEach(annotation => annotation.dom.style.pointerEvents = 'auto')
 }
 
 image.onload = () => Promise.resolve(createImageBitmap(image)).then(b => bitmap = b)
@@ -53,5 +79,10 @@ module.exports = {
     getCanvasContainer : getCanvasContainer,
     setImagePath: setImagePath,
     getImage: getImage,
-    setActiveTool: setActiveTool
+    setActiveTool: setActiveTool,
+    pushEventListner : pushEventListner,
+    popEventListener : popEventListener,
+    getAnnotations : getAnnotations,
+    disableAnnotations : disableAnnotations,
+    enableAnnotations : enableAnnotations
 }

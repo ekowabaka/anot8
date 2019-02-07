@@ -36,7 +36,6 @@ class Annotation {
 
         this.dom = document.createElement('div')
         this.dom.classList.add('annotation')
-        this.dom.addEventListener('click', () => this.select())
 
         this.labelElement = document.createElement('span')
         this.dom.appendChild(this.labelElement)
@@ -53,9 +52,20 @@ class Annotation {
         this.selected = false
 
         this.dom.addEventListener('mousedown', event => {
-            if(!this.selected) return
+            if(!this.selected) {
+                this.select()
+            }
             this.grabPosition = [event.offsetX + this.left, event.offsetY + this.top]
+            canvasManager.pushEventListner(this)
         })
+    }
+
+    mouseMove(event) {
+        console.log(event)
+    }
+
+    mouseUp(event) {
+        canvasManager.popEventListener()
     }
 
     select() {
@@ -79,6 +89,8 @@ class Annotation {
         this.dom.style.cursor = 'move'
         this.selected = true
     }
+
+
 }
 
 class RectangleAnnotation extends Annotation {

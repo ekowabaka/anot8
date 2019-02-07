@@ -1,8 +1,9 @@
 const RectangleAnnotation = require('./annotation').RectangleAnnotation
+const CanvasManager = require('./canvas_manager')
 
 class Tool {
-    constructor(canvas, annotations) {
-        this.annotations = annotations
+    constructor(canvas) {
+        this.annotations = CanvasManager.getAnnotations()
         this.canvas = canvas
     }
 
@@ -44,7 +45,6 @@ class RectangleTool extends Tool {
         if(this.creatingNewAnnotation) {
             this.creatingNewAnnotation = false
             if(this.newAnnotation.width > 2 && this.newAnnotation.height > 2) {
-                console.log(this.newAnnotation.width, this.newAnnotation.height)
                 this.annotations.push(this.newAnnotation)
                 this.newAnnotation.editLabel()
             } else {
@@ -88,6 +88,7 @@ class SelectorTool extends Tool {
     constructor(canvas, annotations) {
         super(canvas, annotations)
         this.cursor = 'default'
+        this.mode = 'default'
     }
 
     activate() {
@@ -96,6 +97,10 @@ class SelectorTool extends Tool {
 
     deactivate() {
         this.annotations.forEach(annotation => annotation.dom.style.pointerEvents = 'none')
+    }
+
+    mouseMove() {
+
     }
 }
 
