@@ -47,6 +47,9 @@ class Annotation {
             tab.classList.add(`${resizeTabType}-resize-tab`)
             tab.style.cursor = `${resizeTabType}-resize`
             tab.style.display = 'none'
+            tab.addEventListener('mousedown', event => {
+                //this.grabPosition = [event.offsetX + this.tab]
+            })
             this.resizeTabs[resizeTabType] = tab
             this.dom.appendChild(tab)
         }
@@ -59,6 +62,7 @@ class Annotation {
             }
             this.grabPosition = [event.offsetX + this.left, event.offsetY + this.top]
             this.originalPosition = [this.left, this.top]
+            this.interractionMode = 'move'
             canvasManager.disableAnnotations()
             canvasManager.pushEventListner(this)
         })
