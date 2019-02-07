@@ -46,7 +46,9 @@ class Annotation {
             tab.classList.add('resize-tab')
             tab.classList.add(`${resizeTabType}-resize-tab`)
             tab.style.cursor = `${resizeTabType}-resize`
+            tab.style.display = 'none'
             this.resizeTabs[resizeTabType] = tab
+            this.dom.appendChild(tab)
         }
 
         this.selected = false
@@ -73,6 +75,7 @@ class Annotation {
     }
 
     select() {
+        canvasManager.deselectAnnotations()
         const resizeTabPositions = {
             n : [-6, this.width / 2 - 6, this.nResize],
             s : [this.height - 6, this.width / 2 - 6, this.sResize],
@@ -87,11 +90,23 @@ class Annotation {
         for(const tab in resizeTabPositions) {
             this.resizeTabs[tab].style.top = resizeTabPositions[tab][0] + 'px'
             this.resizeTabs[tab].style.left = resizeTabPositions[tab][1] + 'px'
-            this.dom.appendChild(this.resizeTabs[tab])
+            this.resizeTabs[tab].style.display = 'block'
         }
 
         this.dom.style.cursor = 'move'
         this.selected = true
+        canvasManager.addSelectedAnnotation(this)
+    }
+
+    deselect() {
+        if(!this.selected) return;
+        const resizeTabTypes = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']
+        for(const tab of resizeTabTypes) {
+            this.resizeTabs[tab].style.display = 'none'
+        }
+        this.selected = false
+        this.dom.style.cursor = 'default'
+        canvasManager.removeSelectedAnnotation(this)
     }
 }
 

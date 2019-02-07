@@ -1,6 +1,7 @@
 let canvas
 let activeTool
 let annotations = []
+let selectedAnnotations = []
 
 const image = document.createElement('img')
 
@@ -72,6 +73,19 @@ function enableAnnotations() {
     annotations.forEach(annotation => annotation.dom.style.pointerEvents = 'auto')
 }
 
+function addSelectedAnnotation(annotation) {
+    selectedAnnotations.push(annotation)
+}
+
+function removeSelectedAnnotation(annotation) {
+    selectedAnnotations.splice(selectedAnnotations.indexOf(annotation), 1)    
+}
+
+function deselectAnnotations() {
+    annotations.forEach(annotation => annotation.deselect())
+    selectedAnnotations = []
+}
+
 image.onload = () => Promise.resolve(createImageBitmap(image)).then(b => bitmap = b)
 
 module.exports = {
@@ -84,5 +98,8 @@ module.exports = {
     popEventListener : popEventListener,
     getAnnotations : getAnnotations,
     disableAnnotations : disableAnnotations,
-    enableAnnotations : enableAnnotations
+    enableAnnotations : enableAnnotations,
+    addSelectedAnnotation : addSelectedAnnotation,
+    removeSelectedAnnotation : removeSelectedAnnotation,
+    deselectAnnotations : deselectAnnotations
 }

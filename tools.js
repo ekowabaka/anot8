@@ -59,6 +59,7 @@ class RectangleTool extends Tool {
      * @param {MouseEvent} event 
      */
     mouseDown(event) {
+        CanvasManager.deselectAnnotations()
         this.startPoint = [
             this.canvas.parentNode.scrollLeft + event.offsetX, 
             this.canvas.parentNode.scrollTop + event.offsetY
@@ -97,6 +98,10 @@ class SelectorTool extends Tool {
 
     deactivate() {
         this.annotations.forEach(annotation => annotation.dom.style.pointerEvents = 'none')
+    }
+
+    mouseDown() {
+        CanvasManager.deselectAnnotations()
     }
 }
 
