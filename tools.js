@@ -98,10 +98,6 @@ class SelectorTool extends Tool {
     deactivate() {
         this.annotations.forEach(annotation => annotation.dom.style.pointerEvents = 'none')
     }
-
-    mouseMove() {
-
-    }
 }
 
 module.exports = {

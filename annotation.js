@@ -39,8 +39,8 @@ class Annotation {
 
         this.labelElement = document.createElement('span')
         this.dom.appendChild(this.labelElement)
-
         this.resizeTabs = {}
+
         for(let resizeTabType of resizeTabTypes) {
             let tab = document.createElement('div')
             tab.classList.add('resize-tab')
@@ -56,16 +56,20 @@ class Annotation {
                 this.select()
             }
             this.grabPosition = [event.offsetX + this.left, event.offsetY + this.top]
+            this.originalPosition = [this.left, this.top]
+            canvasManager.disableAnnotations()
             canvasManager.pushEventListner(this)
         })
     }
 
     mouseMove(event) {
-        console.log(event)
+        this.left = this.originalPosition[0] + event.offsetX - this.grabPosition[0]
+        this.top = this.originalPosition[1] + event.offsetY - this.grabPosition[1]
     }
 
     mouseUp(event) {
         canvasManager.popEventListener()
+        canvasManager.enableAnnotations()
     }
 
     select() {
@@ -89,8 +93,6 @@ class Annotation {
         this.dom.style.cursor = 'move'
         this.selected = true
     }
-
-
 }
 
 class RectangleAnnotation extends Annotation {
