@@ -48,7 +48,16 @@ class Annotation {
             tab.style.cursor = `${resizeTabType}-resize`
             tab.style.display = 'none'
             tab.addEventListener('mousedown', event => {
-                //this.grabPosition = [event.offsetX + this.tab]
+                this.grabPosition = [
+                    event.offsetX + tab.offsetLeft + this.left, 
+                    event.offsetY + tab.offsetTop + this.top
+                ]
+                this.originalPosition = [this.left, this.top]
+                this.originalSize = [this.width, this.height]
+                this.interractionMode = resizeTabType
+                canvasManager.disableAnnotations()
+                canvasManager.pushEventListner(this)    
+                event.stopPropagation()
             })
             this.resizeTabs[resizeTabType] = tab
             this.dom.appendChild(tab)
@@ -69,8 +78,30 @@ class Annotation {
     }
 
     mouseMove(event) {
-        this.left = this.originalPosition[0] + event.offsetX - this.grabPosition[0]
-        this.top = this.originalPosition[1] + event.offsetY - this.grabPosition[1]
+        let deviationX = event.offsetX - this.grabPosition[0]
+        let deviationY = event.offsetY - this.grabPosition[1]
+        if(this.interractionMode == "move") {
+            this.left = this.originalPosition[0] + deviationX
+            this.top = this.originalPosition[1] + deviationY
+        } else {
+            for(const char of this.interractionMode) {
+                if(char == "s") {
+                    this.height = this.originalSize[1] + deviationY
+                }
+                if(char == "e") {
+                    this.width = this.originalSize[0] + deviationX
+                }
+                if(char == "n") {
+                    this.top = this.originalPosition[1] + deviationY
+                    this.height = this.originalSize[1] - deviationY
+                }
+                if(char == "w") {
+                    this.left = this.originalPosition[0] + deviationX
+                    this.width = this.originalSize[0] - deviationX
+                }
+            }
+            this.repositionTabs()
+        }
     }
 
     mouseUp(event) {
@@ -78,8 +109,7 @@ class Annotation {
         canvasManager.enableAnnotations()
     }
 
-    select() {
-        canvasManager.deselectAnnotations()
+    repositionTabs() {
         const resizeTabPositions = {
             n : [-6, this.width / 2 - 6, this.nResize],
             s : [this.height - 6, this.width / 2 - 6, this.sResize],
@@ -95,8 +125,12 @@ class Annotation {
             this.resizeTabs[tab].style.top = resizeTabPositions[tab][0] + 'px'
             this.resizeTabs[tab].style.left = resizeTabPositions[tab][1] + 'px'
             this.resizeTabs[tab].style.display = 'block'
-        }
+        }        
+    }
 
+    select() {
+        canvasManager.deselectAnnotations()
+        this.repositionTabs()
         this.dom.style.cursor = 'move'
         this.selected = true
         canvasManager.addSelectedAnnotation(this)
