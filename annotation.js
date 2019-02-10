@@ -21,12 +21,12 @@ class LabelEditor {
         this.dom.style.height = '26px'
         this.dom.value = this.label
         annotation.dom.parentNode.appendChild(this.dom)
-        this.dom.addEventListener('blur', () => this.saveLabel(annotation))
         this.dom.addEventListener('keypress', event => {
             if(event.charCode == 13) this.saveLabel(annotation)
         });
         this.dom.select()
-        this.dom.focus()
+        setTimeout(() => this.dom.focus(), 200)
+        setTimeout(() => this.dom.addEventListener('blur', () => this.saveLabel(annotation)), 200)
     }
 }
 
@@ -39,6 +39,7 @@ class Annotation {
 
         this.labelElement = document.createElement('span')
         this.dom.appendChild(this.labelElement)
+        this.labelElement.classList.add('label')
         this.resizeTabs = {}
 
         for(let resizeTabType of resizeTabTypes) {
@@ -64,6 +65,12 @@ class Annotation {
         }
 
         this.selected = false
+
+        this.labelElement.addEventListener('mousedown', event => {
+            console.log('Hello!')
+            this.editLabel()
+            event.stopPropagation()
+        })
 
         this.dom.addEventListener('mousedown', event => {
             if(!this.selected) {
@@ -134,6 +141,7 @@ class Annotation {
         this.dom.style.cursor = 'move'
         this.selected = true
         canvasManager.addSelectedAnnotation(this)
+        this.dom.classList.add('selected')
     }
 
     deselect() {
@@ -144,8 +152,14 @@ class Annotation {
         }
         this.selected = false
         this.dom.style.cursor = 'default'
+        this.dom.classList.remove('selected')
         canvasManager.removeSelectedAnnotation(this)
     }
+
+    editLabel() {
+        const labelEditor = new LabelEditor(this.label)
+        labelEditor.attach(this)
+    }    
 }
 
 class RectangleAnnotation extends Annotation {
@@ -196,11 +210,6 @@ class RectangleAnnotation extends Annotation {
 
     get height() {
         return this.dom.getBoundingClientRect().height
-    }
-
-    editLabel() {
-        const labelEditor = new LabelEditor(this.label)
-        labelEditor.attach(this)
     }
 }
 

@@ -12,17 +12,14 @@ function setCanvasContainer(element) {
     
 
     image.addEventListener('mousedown', event => {
-        //activeTool.mouseDown(event)
         eventListeners[0].mouseDown(event)
     });
 
     image.addEventListener('mouseup', event => {
-        //activeTool.mouseUp(event)
         eventListeners[0].mouseUp(event)
     });
 
     image.addEventListener('mousemove', event => {
-        //activeTool.mouseMove(event)
         eventListeners[0].mouseMove(event)
     });
 }
