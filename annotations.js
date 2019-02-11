@@ -67,7 +67,6 @@ class Annotation {
         this.selected = false
 
         this.labelElement.addEventListener('mousedown', event => {
-            console.log('Hello!')
             this.editLabel()
             event.stopPropagation()
         })
@@ -213,10 +212,31 @@ class RectangleAnnotation extends Annotation {
     }
 
     get data() {
-        return {left: this.left, top:this.top, width: this.width, height: this.height, label: this.label}
+        return {
+            left: this.left, 
+            top:this.top, 
+            width: this.width, 
+            height: this.height, 
+            label: this.label,
+            type: 'rectangle'
+        }
     }
 }
 
+function getAnnotationObject(object) {
+    let annotation
+
+    switch(object.type) {
+        case "rectangle":
+            annotation = new RectangleAnnotation(object.left, object.top, object.width, object.height)
+            annotation.label = object.label
+            break;
+    }
+
+    return annotation
+}
+
 module.exports = {
-    RectangleAnnotation : RectangleAnnotation
+    RectangleAnnotation : RectangleAnnotation,
+    getAnnotationObject : getAnnotationObject
 }

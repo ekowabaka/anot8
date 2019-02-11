@@ -83,6 +83,11 @@ function deselectAnnotations() {
     selectedAnnotations = []
 }
 
+function addAnnotation(annotation) {
+    annotations.push(annotation)
+    canvas.appendChild(annotation.dom)
+}
+
 image.onload = () => Promise.resolve(createImageBitmap(image)).then(b => bitmap = b)
 
 module.exports = {
@@ -94,6 +99,7 @@ module.exports = {
     pushEventListner : pushEventListner,
     popEventListener : popEventListener,
     getAnnotations : getAnnotations,
+    addAnnotation: addAnnotation,
     disableAnnotations : disableAnnotations,
     enableAnnotations : enableAnnotations,
     addSelectedAnnotation : addSelectedAnnotation,

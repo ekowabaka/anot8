@@ -1,6 +1,8 @@
 const remote = require('electron').remote
 const canvasManager = require('./canvas_manager')
 const tools = require('./tools')
+const annotations = require('./annotations')
+const fs = require('fs')
 let currentFile = null
 
 
@@ -15,13 +17,20 @@ function loadImage() {
             if(filename) {
                 canvasManager.setImagePath(filename[0])
                 currentFile = filename[0]
+                fs.readFile(currentFile + '.anot8', (err, contents) => {
+                    const annotationsFromFile = JSON.parse(contents)
+                    annotationsFromFile.forEach(annotation => canvasManager.addAnnotation(annotations.getAnnotationObject(annotation)))
+                })
             }
         }
     );
 }
 
 function saveAnnoations() {
-    console.log(JSON.stringify(canvasManager.getAnnotations().map(annotation => annotation.data)))
+    let annotations = JSON.stringify(canvasManager.getAnnotations().map(annotation => annotation.data))
+    fs.writeFile(currentFile + '.anot8', annotations, err => {
+        if(err) alert("Failed to save annotations")
+    })
 }
 
 document.addEventListener('DOMContentLoaded', () => {

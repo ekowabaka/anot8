@@ -1,4 +1,4 @@
-const RectangleAnnotation = require('./annotation').RectangleAnnotation
+const RectangleAnnotation = require('./annotations').RectangleAnnotation
 const CanvasManager = require('./canvas_manager')
 
 class Tool {
