@@ -211,6 +211,10 @@ class RectangleAnnotation extends Annotation {
     get height() {
         return this.dom.getBoundingClientRect().height
     }
+
+    get data() {
+        return {left: this.left, top:this.top, width: this.width, height: this.height, label: this.label}
+    }
 }
 
 module.exports = {

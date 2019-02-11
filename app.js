@@ -1,6 +1,7 @@
 const remote = require('electron').remote
 const canvasManager = require('./canvas_manager')
 const tools = require('./tools')
+let currentFile = null
 
 
 function loadImage() {
@@ -11,9 +12,16 @@ function loadImage() {
             multipleSelections: false
         },
         filename => {
-            if(filename) canvasManager.setImagePath(filename[0])
+            if(filename) {
+                canvasManager.setImagePath(filename[0])
+                currentFile = filename[0]
+            }
         }
     );
+}
+
+function saveAnnoations() {
+    console.log(JSON.stringify(canvasManager.getAnnotations().map(annotation => annotation.data)))
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selector : new tools.SelectorTool(canvas)
     }
     document.querySelector("#open-image-button").addEventListener('click', loadImage)
+    document.querySelector("#save-image-button").addEventListener('click', saveAnnoations)
     document.querySelectorAll("#toolbar > .tool").forEach(
         toolButton => 
             toolButton.addEventListener('click', () => {
