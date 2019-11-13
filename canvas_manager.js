@@ -129,7 +129,7 @@ function deselectAnnotations() {
 }
 
 function addAnnotation(annotation) {
-  annotation.zoomFactor = 1
+  annotation.zoomFactor = zoomFactor
   annotations.push(annotation)
   canvas.appendChild(annotation.dom)
 }

@@ -62,11 +62,11 @@ class Annotation {
       tab.style.display = 'none'
       tab.addEventListener('mousedown', event => {
         this.grabPosition = [
-          event.offsetX + tab.offsetLeft + this.left,
-          event.offsetY + tab.offsetTop + this.top
+          event.offsetX + tab.offsetLeft + this.displayLeft,
+          event.offsetY + tab.offsetTop + this.displayTop
         ]
-        this.originalPosition = [this.dom.left, this.dom.top]
-        this.originalSize = [this.dom.width, this.dom.height]
+        this.originalPosition = [this.displayLeft, this.displayTop]
+        this.originalSize = [this.displayWidth, this.displayHeight]
         this.interractionMode = resizeTabType
         canvasManager.disableAnnotations()
         canvasManager.pushEventListner(this)
@@ -87,26 +87,33 @@ class Annotation {
       if (!this.selected) {
         this.select()
       }
-      this.grabPosition = [event.offsetX + this.left, event.offsetY + this.top]
-      this.originalPosition = [this.left, this.top]
+      this.grabPosition = [event.offsetX + this.displayLeft, event.offsetY + this.displayTop]
+      this.originalPosition = [this.displayLeft, this.displayTop]
       this.interractionMode = 'move'
       canvasManager.disableAnnotations()
       canvasManager.pushEventListner(this)
     })
 
     this.dom.addEventListener('keydown', event => {
+      const increment = event.shiftKey ? 1 : 10
       if(event.keyCode == 39) {
-        this.left += 10
+        this.left += increment / this.zoomFactor
+        event.preventDefault()
       } else if (event.keyCode == 37) {
-        this.left -= 10
+        this.left -= increment / this.zoomFactor
+        event.preventDefault()
       } else if (event.keyCode == 38) {
-        this.top -= 10
+        this.top -= increment / this.zoomFactor
+        event.preventDefault()
       } else if (event.keyCode ==40) {
-        this.top += 10
+        this.top += increment / this.zoomFactor
+        event.preventDefault()
       } else if (event.key == "Escape") {
         canvasManager.deselectAnnotations()
+        event.preventDefault()
       } else if (event.key == "Delete") {
         canvasManager.deleteSelectedAnnotations()
+        event.preventDefault()
       }
     })
   }
@@ -115,23 +122,23 @@ class Annotation {
     let deviationX = event.offsetX - this.grabPosition[0]
     let deviationY = event.offsetY - this.grabPosition[1]
     if (this.interractionMode == "move") {
-      this.left = this.originalPosition[0] + deviationX
-      this.top = this.originalPosition[1] + deviationY
+      this.left = (this.originalPosition[0] + deviationX) / this.zoomFactor
+      this.top = (this.originalPosition[1] + deviationY) / this.zoomFactor
     } else {
       for (const char of this.interractionMode) {
         if (char == "s") {
-          this.height = (this.originalSize[1] + deviationY) * this.zoomFactor
+          this.height = (this.originalSize[1] + deviationY) / this.zoomFactor
         }
         if (char == "e") {
-          this.width = (this.originalSize[0] + deviationX) * this.zoomFactor
+          this.width = (this.originalSize[0] + deviationX) / this.zoomFactor
         }
         if (char == "n") {
-          this.top = (this.originalPosition[1] + deviationY) * this.zoomFactor
-          this.height = (this.originalSize[1] - deviationY) * this.zoomFactor
+          this.top = (this.originalPosition[1] + deviationY) / this.zoomFactor
+          this.height = (this.originalSize[1] - deviationY) / this.zoomFactor
         }
         if (char == "w") {
-          this.left = (this.originalPosition[0] + deviationX) * this.zoomFactor
-          this.width = (this.originalSize[0] - deviationX) * this.zoomFactor
+          this.left = (this.originalPosition[0] + deviationX) / this.zoomFactor
+          this.width = (this.originalSize[0] - deviationX) / this.zoomFactor
         }
       }
       this.repositionTabs()
@@ -199,6 +206,9 @@ class Annotation {
   set zoomFactor(value) {
     this._zoomFactor = value
     this.redraw()
+    if(this.selected) {
+      this.repositionTabs()
+    }
   }
 
   redraw() {
