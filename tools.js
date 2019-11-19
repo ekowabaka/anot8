@@ -5,8 +5,11 @@ const canvasManager = require('./canvas_manager')
 
 class Tool {
   constructor(canvas) {
-    this.annotations = canvasManager.getAnnotations()
     this.canvas = canvas
+  }
+
+  get annotations () {
+    return canvasManager.getAnnotations()
   }
 
   mouseUp() { }
@@ -30,8 +33,8 @@ class RectangleTool extends Tool {
    * 
    * @param {Array} annotations 
    */
-  constructor(canvas, annotations) {
-    super(canvas, annotations)
+  constructor(canvas) {
+    super(canvas)
     this.creatingNewAnnotation = false
     this.newAnnotation = undefined
     this.startPoint = undefined

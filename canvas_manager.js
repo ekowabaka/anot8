@@ -12,17 +12,27 @@ let zoomFactor = 0.25
 let imageSize
 let eventListeners = []
 
-const image = document.createElement('img')
-image.addEventListener('load', event => {
-  imageSize = [image.width, image.height]
-  fitWidth()
-});
+let image
+let defaultTool
 
 function setCanvasContainer(element) {
   canvas = element;
+}
+
+
+/**
+ * Loads a new image unto the canvas.
+ * Called when either an annotation is opened, or a new annotation is created.
+ * 
+ * @param string path 
+ */
+function setImagePath(path) {
+  if(image) {
+    canvas.removeChild(image)
+  }
+  image = document.createElement('img')
   image.draggable = false
   canvas.appendChild(image)
-
 
   image.addEventListener('mousedown', event => {
     eventListeners[0].mouseDown(event)
@@ -35,18 +45,20 @@ function setCanvasContainer(element) {
   image.addEventListener('mousemove', event => {
     eventListeners[0].mouseMove(event)
   });
-}
 
-/**
- * Loads a new image unto the canvas.
- * Called when either an annotation is opened, or a new annotation is created.
- * 
- * @param string path 
- */
-function setImagePath(path) {
   image.src = path
+  return new Promise(function(resolve, reject) {
+    image.addEventListener('load', () => {
+      imageSize = [image.width, image.height]
+      annotations.forEach(annotation => annotation.delete())
+      annotations = []    
+      console.log('cleared all annotations')
+      setActiveTool(defaultTool)
+      fitWidth()    
+      resolve()
+    })
+  })
 }
-
 /**
  * Get the image currently on the canvas.
  */
@@ -142,8 +154,6 @@ function deleteSelectedAnnotations() {
   selectedAnnotations = []
 }
 
-//image.onload = () => Promise.resolve(createImageBitmap(image)).then(b => bitmap = b)
-
 module.exports = {
   setCanvasContainer: setCanvasContainer,
   getCanvasContainer: getCanvasContainer,
@@ -163,5 +173,6 @@ module.exports = {
   deleteSelectedAnnotations : deleteSelectedAnnotations,
   zoomIn: zoomIn,
   zoomOut: zoomOut,
-  getZoomFactor : () => zoomFactor
+  getZoomFactor : () => zoomFactor,
+  setDefaultTool : tool => {defaultTool = tool}
 }

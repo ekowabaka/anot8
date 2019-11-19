@@ -18,17 +18,19 @@ function loadImage() {
   ).then(
     response => {
       if (!response.canceled) {
-        canvasManager.setImagePath(response.filePaths[0])
-        currentFile = response.filePaths[0]
-        const jsonFile = currentFile + '.anot8'
-        fs.readFile(jsonFile, (err, contents) => {
-          if (err) return;
-          try {
-            const annotationsFromFile = JSON.parse(contents)
-            annotationsFromFile.forEach(annotation => canvasManager.addAnnotation(annotations.getAnnotationObject(annotation)))  
-          } catch (e) {
-            alert(`The annotation file ${jsonFile} is corrupt`)
-          }
+        canvasManager.setImagePath(response.filePaths[0]).then(() => {
+          currentFile = response.filePaths[0]
+          const jsonFile = currentFile + '.anot8'
+          fs.readFile(jsonFile, (err, contents) => {
+            if (err) return;
+            try {
+              const annotationsFromFile = JSON.parse(contents)
+              annotationsFromFile.forEach(annotation => canvasManager.addAnnotation(annotations.getAnnotationObject(annotation)))  
+              canvasManager.enableAnnotations()
+            } catch (e) {
+              alert(`The annotation file ${jsonFile} is corrupt`)
+            }
+          })  
         })
       }
     }
@@ -83,5 +85,5 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   toolbar = document.getElementById('toolbar')
   canvasManager.setCanvasContainer(canvas)
-  canvasManager.setActiveTool(toolInstances.selector)
+  canvasManager.setDefaultTool(toolInstances.selector)
 });
