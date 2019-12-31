@@ -1,0 +1,105 @@
+body {
+    margin: 0px;
+}
+
+#toolbar {
+    height: 32px;
+    font-size: 0pt;
+    box-shadow: 0px 3px 5px rgba(128, 128, 128, 0.2);
+    z-index: 100;
+    padding: 5px;
+}
+
+#toolbar > span.button {
+    display: inline-block;
+    font-size: 16px;
+    padding: 5px;
+    margin: 2px;
+    width: 20px;
+    color: #404040;
+    text-align: center;
+    border-radius: 2px;
+}
+
+#toolbar > span.button:hover {
+    background-color: #f0f0f0;
+    color: #505050
+}
+
+#toolbar > span.button:active, #toolbar > span.button.activated {
+  box-shadow: inset 1px 1px 1px rgba(128, 128, 128, 0.2);
+  background-color: #f0f0f0;
+}
+
+#toolbar > span.separator {
+  border-left: 1px solid #c0c0c0;
+  height: 28px;
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 2px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+#canvas-container {
+    overflow: auto;
+    width: 100%;
+    background-color: #808080;
+    flex-grow: 1;
+    position: relative;
+}
+
+#canvas-container img {
+    cursor: crosshair
+}
+
+#canvas-container > * {
+    position: absolute
+}
+
+#canvas-container .annotation{
+    background: rgba(255, 0, 0, 0.2);
+    border:1px solid red;
+    pointer-events: none;
+    opacity: 0.5;
+    outline: none;
+    box-sizing: border-box;
+}
+
+#canvas-container .annotation:hover, #canvas-container .annotation.selected {
+    opacity: 0.7;
+}
+
+#canvas-container > .annotation > .label {
+    padding: 10px;
+    color: red;
+    font-family: sans-serif;
+    font-size: 10px;
+    display: block
+}
+
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.label-editor {
+    border: none;
+    padding: 0px;
+    background: transparent;
+    min-width: 100px;
+    text-align: center
+}
+
+.label-editor:focus {
+    outline: none
+}
+
+.resize-tab {
+    width: 10px;
+    height: 10px;
+    border:1px solid black;
+    background: white;
+    position: absolute
+}
