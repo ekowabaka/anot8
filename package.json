@@ -1,21 +1,20 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
-  "main": "main.js",
+  "name": "anot8",
+  "version": "0.1.0",
+  "description": "A simple image anotation tool",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/ekowabaka/anot8",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "image",
+    "annotation",
+    "simple",
+    "tool"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Ekow Abaka",
+  "license": "MIT",
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
     "electron": "^7.1.0"

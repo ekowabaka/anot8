@@ -1,10 +1,12 @@
 'use strict'
 
 const {remote, clipboard} = require('electron')
-const canvasManager = require('./canvas_manager')
-const tools = require('./tools')
-const annotations = require('./annotations')
 const fs = require('fs')
+
+const canvasManager = require('../../src/canvas_manager')
+const tools = require('../../src/tools')
+const annotations = require('../../src/annotations')
+
 let currentFile = null
 
 
