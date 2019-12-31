@@ -1,5 +1,6 @@
 /**
  * Maintains the image and all the annotations on it in a manner analagous to a canvas.
+ * @todo Look at prospects of converting this to a web component.
  */
 
 'use strict'
