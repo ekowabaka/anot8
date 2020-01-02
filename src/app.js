@@ -2,6 +2,7 @@
 
 const {remote, clipboard} = require('electron')
 const fs = require('fs')
+const path = require('path')
 
 const canvasManager = require('../../src/canvas_manager')
 const tools = require('../../src/tools')
@@ -9,15 +10,15 @@ const annotations = require('../../src/annotations')
 
 let currentFile = null
 
-
 function loadImage() {
-  remote.dialog.showOpenDialog(
-    remote.getCurrentWindow(),
-    {
-      filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif', 'webp'] }],
-      multipleSelections: false
-    }
-  ).then(
+  let properties = {
+    filters: [{ name: 'Images', extensions: ['jpg', 'png', 'gif', 'webp', 'jpeg']}],
+    multipleSelections: false
+  }
+  if(currentFile) {
+    properties.defaultPath = path.dirname(currentFile)
+  }
+  remote.dialog.showOpenDialog(remote.getCurrentWindow(), properties).then(
     response => {
       if (!response.canceled) {
         canvasManager.setImagePath(response.filePaths[0]).then(() => {
