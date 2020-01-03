@@ -216,7 +216,7 @@ class Annotation {
   }
 }
 
-class RectangleAnnotation extends Annotation {
+class BoxAnnotation extends Annotation {
   constructor(left, top, width, height) {
     super()
     this.shape = {left: 0, top: 0, width: 0, height: 0}
@@ -288,13 +288,20 @@ class RectangleAnnotation extends Annotation {
   }
 
   get data() {
+    let imageSize = canvasManager.getImageSize()
+
     return {
       left: this.left,
       top: this.top,
       width: this.width,
       height: this.height,
+      bounds: [this.left, this.top, this.width, this.height],
+      normalized_bounds: [
+        this.left / imageSize[0], this.top / imageSize[1], 
+        this.width / imageSize[0], this.height / imageSize[1]
+      ],
       label: this.label,
-      type: 'rectangle'
+      type: 'box'
     }
   }
 
@@ -310,8 +317,9 @@ function getAnnotationObject(object) {
   let annotation
 
   switch (object.type) {
+    case "box":
     case "rectangle":
-      annotation = new RectangleAnnotation(object.left, object.top, object.width, object.height)
+      annotation = new BoxAnnotation(object.left, object.top, object.width, object.height)
       annotation.label = object.label
       break;
   }
@@ -320,6 +328,6 @@ function getAnnotationObject(object) {
 }
 
 module.exports = {
-  RectangleAnnotation: RectangleAnnotation,
+  RectangleAnnotation: BoxAnnotation,
   getAnnotationObject: getAnnotationObject
 }

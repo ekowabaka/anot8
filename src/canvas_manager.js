@@ -67,6 +67,10 @@ function getImage() {
   return image
 }
 
+function getImageSize() {
+  return imageSize;
+}
+
 function zoom(level) {
   zoomFactor = level
   image.width = imageSize[0] * zoomFactor;
@@ -160,6 +164,7 @@ module.exports = {
   getCanvasContainer: getCanvasContainer,
   setImagePath: setImagePath,
   getImage: getImage,
+  getImageSize: getImageSize,
   setActiveTool: setActiveTool,
   pushEventListner: pushEventListner,
   popEventListener: popEventListener,
