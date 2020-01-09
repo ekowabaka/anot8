@@ -58,7 +58,6 @@ function pasteAnnotations() {
   try{
     readAnnotations = JSON.parse(readAnnotations)
   } catch (e) { }
-  console.log(readAnnotations)
   if(readAnnotations.type == 'annotations') {
     readAnnotations.data.forEach(annotation => canvasManager.addAnnotation(annotations.getAnnotationObject(annotation)))  
   }
@@ -78,6 +77,9 @@ document.addEventListener('DOMContentLoaded', () => {
     toolButton =>
       toolButton.addEventListener('click', () => {
         canvasManager.setActiveTool(toolInstances[toolButton.getAttribute('tool-name')])
+        document.querySelectorAll("#toolbar > .tool.activated")
+          .forEach(otherToolButton => otherToolButton.classList.remove('activated'))
+        toolButton.classList.add('activated')
       })
   )
   document.addEventListener('paste', event => {
